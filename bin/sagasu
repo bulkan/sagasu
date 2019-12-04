@@ -1,0 +1,11 @@
+#!/usr/bin/env node
+
+const { handleCli } = require('../src/cli');
+
+function main() {
+	handleCli();
+}
+
+if (require.main === module) {
+  main();
+}
