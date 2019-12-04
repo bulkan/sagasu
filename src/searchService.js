@@ -1,4 +1,4 @@
-const getFields = {
+const getFields = () => {
 
 };
 

@@ -1,7 +1,7 @@
 const program = require('commander');
 const searchService = require('./searchService');
 
-const handleCli = () => {
+const handleCli = (argv) => {
 	const programHelp = () => {
 		program.help();
   	process.exit(1);
@@ -17,22 +17,22 @@ const handleCli = () => {
 	program
 		.command('search')
 		.description('Search for a value with a data type')
-		.requiredOption('-t, --type [value]', 'valid fields    user | ticket | organisation')
-		.action(({ type }) => {
+		.requiredOption('-t, --type [value]', 'valid types; user | ticket | organisation')
+		.requiredOption('-f, --field [value]', 'field to search by')
+		.requiredOption('-q, --value [value]', 'search value')
+		.action(({ type, field, value}) => {
+
 			if (!['user', 'ticket', 'organisation'].includes(type)) {
 				programHelp();
 			};
 
-			console.log(type);
-
-			// prompt here ?
-
+			console.log({ type, field, value});
 			// searchService.search({ type });
 		});
 
-	program.parse(process.argv);
+	program.parse(argv);
 
-	if (!process.argv.slice(2).length) {
+	if (!argv.slice(2).length) {
 		programHelp();
 	}
 };

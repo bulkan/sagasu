@@ -3,7 +3,7 @@
 const { handleCli } = require('../src/cli');
 
 function main() {
-	handleCli();
+	handleCli(process.argv);
 }
 
 if (require.main === module) {
