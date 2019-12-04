@@ -3,7 +3,7 @@
 
 ## Setup
 
-*NOTE: Required node verions is `>=10.15.3`
+*NOTE*: Required node verions is `>=10.15.3`
 
 ```
 yarn install 
