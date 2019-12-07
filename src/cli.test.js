@@ -1,13 +1,19 @@
 const { handleCli } = require('./cli');
-const searchService = require('./searchService');
 
-jest.mock('./searchService', () => ({
-	getFields: jest.fn(),
-	query: jest.fn()
-}));
+const search = require('./searchService');
+
+const getFields = jest.fn();
+const query = jest.fn();
+
+search.makeSearchService = () => ({
+	getFields, query
+});
 
 describe('cli', () => {
+	let searchService = search.makeSearchService();
+
 	describe('list', () => {
+
 		beforeEach(() => {
 			handleCli([ '', '', 'list' ]);
 		});

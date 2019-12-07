@@ -1,7 +1,9 @@
 const program = require('commander');
-const searchService = require('./searchService');
+const search = require('./searchService');
 
 const handleCli = (argv) => {
+	const searchService = search.makeSearchService();
+
 	const programHelp = () => {
 		program.help();
   	process.exit(1);
