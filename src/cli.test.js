@@ -2,7 +2,8 @@ const { handleCli } = require('./cli');
 const searchService = require('./searchService');
 
 jest.mock('./searchService', () => ({
-	getFields: jest.fn()
+	getFields: jest.fn(),
+	query: jest.fn()
 }));
 
 describe('cli', () => {
@@ -11,19 +12,21 @@ describe('cli', () => {
 			handleCli([ '', '', 'list' ]);
 		});
 
-		it('calls searchService', () => {
+		it('calls searchService.getFields', () => {
 			expect(searchService.getFields).toHaveBeenCalled();
 		});
 	});
 
 	describe('search', () => {
 		describe('when all required options are provided', () => {
-			it.todo('should call searchService');
+			it('should call searchService.query', () => {
+				handleCli(['', '', 'search', '-t', 'user', '-f', '_id', '-q', 'abc123']);
+				expect(searchService.query).toHaveBeenCalledWith({
+					type: 'user',
+					field: '_id',
+					query: 'abc123'
+				});
+			});
 		});
-
-
-		describe('when any required options is not provided', () => {
-			it.todo('should not call searchService');
-		});
-	})
-})
+	});
+});

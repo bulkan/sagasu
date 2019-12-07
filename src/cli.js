@@ -19,15 +19,15 @@ const handleCli = (argv) => {
 		.description('Search for a value with a data type')
 		.requiredOption('-t, --type [value]', 'valid types; user | ticket | organisation')
 		.requiredOption('-f, --field [value]', 'field to search by')
-		.requiredOption('-q, --value [value]', 'search value')
-		.action(({ type, field, value}) => {
+		.requiredOption('-q, --query [value]', 'search value')
+		.action(({ type, field, query}) => {
 
 			if (!['user', 'ticket', 'organisation'].includes(type)) {
 				programHelp();
 			};
 
-			console.log({ type, field, value});
-			// searchService.search({ type });
+			const results = searchService.query({ type, field, query });
+			console.log(results);
 		});
 
 	program.parse(argv);
