@@ -1,9 +1,9 @@
 const makeSearchService = () => {
-	const getFields = () => {
+	const getFields = async () => {
 		return null;
 	};
 
-	const query = () => {
+	const query = async () => {
 
 	};
 

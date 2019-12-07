@@ -1,7 +1,9 @@
 const program = require('commander');
 const search = require('./searchService');
 
-const handleCli = (argv) => {
+const handleCli = async (argv) => {
+	let actionPromise;
+
 	const searchService = search.makeSearchService();
 
 	const programHelp = () => {
@@ -13,7 +15,7 @@ const handleCli = (argv) => {
 		.command('list')
 		.description('List searchable fields')
 		.action(() => {
-			console.log(searchService.getFields());
+			actionPromise = searchService.getFields();
 		});
 
 	program
@@ -28,8 +30,7 @@ const handleCli = (argv) => {
 				programHelp();
 			};
 
-			const results = searchService.query({ type, field, query });
-			console.log(results);
+			actionPromise = searchService.query({ type, field, query });
 		});
 
 	program.parse(argv);
@@ -37,6 +38,8 @@ const handleCli = (argv) => {
 	if (!argv.slice(2).length) {
 		programHelp();
 	}
+
+	return actionPromise;
 };
 
 module.exports = {
