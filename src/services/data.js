@@ -37,8 +37,38 @@ const makeDataService = () => {
 		});
 	};
 
+	const filterByFieldAndValue = (contentType, field, query ) => {
+		if (!contentType || !field || !query) {
+			return Promise.reject(new Error(`Missing params`));
+		}
+
+		const parser = JSONStream.parse('*', (obj) => {
+			const val = obj[field];
+
+			if(val && val.toString().indexOf(query) > -1) {
+				return obj;
+			}
+		});
+
+		return new Promise((resolve, reject) => {
+			const contentTypeFilePath = contentTypeFilePaths[contentType.toLowerCase()];
+			const stream = fs.createReadStream(contentTypeFilePath)
+				.pipe(parser);
+
+			let results = [];
+			
+			stream.on('end', () => resolve(results) );
+			stream.on('error', reject);
+			stream.on('data', data => {
+				results.push(data);
+			});
+		});
+
+	};
+
 	return {
-		getKeysFromContentType
+		getKeysFromContentType,
+		filterByFieldAndValue
 	}
 };
 

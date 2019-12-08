@@ -5,12 +5,12 @@ const { makeDataService } = require('./data');
 jest.mock('fs');
 
 describe('dataService', () => {
-	let dataService;
+	const dataService = makeDataService();
+	const jsonString = `[{"firstName":"bulkan","lastName":"evcimen","id":"123"},{"lastName":"gilfyole","id":444}]`
 
 	beforeEach(() => {
-		dataService = makeDataService();
 		const mockReadableStream = new Readable();
-		mockReadableStream.push('[{"firstName":"bulkan","lastName":"evcimem", "id": "123"}]');
+		mockReadableStream.push(jsonString);
 		mockReadableStream.push(null);
 		fs.createReadStream.mockReturnValue(mockReadableStream);
 	});
@@ -23,6 +23,29 @@ describe('dataService', () => {
 		it('should return list of available fields', async () => {
 			const keys = await dataService.getKeysFromContentType('users');
 			expect(keys).toEqual(['firstName', 'lastName', 'id']);
+		});
+	});
+
+	describe('#filterByFieldAndValue', () => {
+
+		it.todo('should throw an error if required params arent passed');
+		it('should return fields found', async () => {
+			const results = await dataService.filterByFieldAndValue('users', 'lastName', 'evcimen');
+			expect(results).toEqual(
+				[ { firstName: 'bulkan', lastName: 'evcimen', id: '123' } ]
+			)
+		});
+
+		it('should handle missing properties on records', async () => {
+			const results = await dataService.filterByFieldAndValue('users', 'firstName', 'bertram');
+			expect(results).toEqual([]);
+		});
+
+		it('should treat fields as string', async () => {
+			const results = await dataService.filterByFieldAndValue('users', 'id', '444');
+			expect(results).toEqual([
+				{lastName: 'gilfyole', id: 444}
+			]);
 		});
 	});
 });
