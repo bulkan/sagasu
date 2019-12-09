@@ -1,5 +1,16 @@
 import { DataService } from './data';
 
+export interface AvailableFields {
+	users: Array<string>;
+	tickets: Array<string>;
+	organizations: Array<string>;
+}
+
+export interface SearchService  {
+	listFields: () => Promise<AvailableFields>;
+	query: () => Promise<any>;
+}
+
 export const makeSearchService = ({ dataService } : { dataService: DataService }) => {
 	const listFields = () => {
 		return Promise.all([

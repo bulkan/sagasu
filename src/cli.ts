@@ -2,10 +2,10 @@ import program from 'commander';
 import * as search from './services/search';
 import { makeDataService } from './services/data';
 
-const handleListCommandResult = results => {
+const handleListCommandResult = (results: search.AvailableFields) => {
 	let output = 'Available Fields\n\n';
 
-	Object.entries(results).map(([ key, value ]: [string, Array<string>]) => {
+	Object.entries(results).map(([ key, value ]) => {
 		output += `${key}\n`;
 		output += `\n`.padStart(key.length, '-');
 		output += `\n${value.join('\n')}\n\n`;

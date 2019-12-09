@@ -6,8 +6,7 @@ import JSONStream from 'JSONStream';
 export interface DataService {
 	getKeysFromContentType: ({ contentType }: { contentType?: string }) => Promise<any>;
 	filterByFieldAndValue: ({  contentType, field, query }) => Promise<any>;
-}
-
+};
 
 export const makeDataService = (): DataService => {
 	const dataRoot = path.join(__dirname, '..', '..', 'data');
