@@ -5,7 +5,7 @@
     "test": "jest"
   },
   "engines": {
-    "node": ">=10.15.3"
+    "node": ">=12.3.0"
   },
   "repository": "git@github.com:bulkan/sagasu.git",
   "author": "Bulkan Evcimen <bulkan@gmail.com>",
