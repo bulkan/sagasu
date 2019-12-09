@@ -4,7 +4,6 @@ import { makeDataService } from './data';
 
 jest.mock('fs');
 
-
 describe('dataService', () => {
 	const dataService = makeDataService();
 	const jsonString = `[{"firstName":"bulkan","lastName":"evcimen","id":"123"},{"lastName":"gilfyole","id":444}]`;
@@ -30,11 +29,10 @@ describe('dataService', () => {
 	});
 
 	describe('#filterByFieldAndValue', () => {
-
 		it.todo('should throw an error if required params arent passed');
 
 		it('should return fields found', async () => {
-			const results = await dataService.filterByFieldAndValue({ 
+			const results = await dataService.queryByField({ 
 				contentType: 'users', 
 				field: 'lastName', 
 				query: 'evcimen' 
@@ -45,14 +43,14 @@ describe('dataService', () => {
 		});
 
 		it('should handle missing properties on records', async () => {
-			const results = await dataService.filterByFieldAndValue({
+			const results = await dataService.queryByField({
 				contentType: 'users',  field: 'firstName', query: 'bertram'
 			});
 			expect(results).toEqual([]);
 		});
 
 		it('should treat fields as string', async () => {
-			const results = await dataService.filterByFieldAndValue({
+			const results = await dataService.queryByField({
 				contentType: 'users', field: 'id', query: '444' 
 			});
 			expect(results).toEqual([

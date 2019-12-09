@@ -37,7 +37,7 @@ export class DataService {
 		});
 	}
 
-	public filterByFieldAndValue({ contentType, field, query }) {
+	public queryByField({ contentType, field, query }): Promise<Array<object>>  {
 		if (!contentType || !field || !query) {
 			return Promise.reject(new Error(`Missing params`));
 		}
@@ -56,7 +56,7 @@ export class DataService {
 			stream.on('data', data => {
 				const val = data[field];
 
-				if (val && val.toString().includes(query)) {
+				if (val && val.toString() === query) {
 					results.push(data);
 				}
 			});

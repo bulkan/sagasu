@@ -5,7 +5,7 @@ import { makeDataService } from './services/data';
 const handleListCommandResult = (results: search.AvailableFields) => {
 	let output = 'Available Fields\n\n';
 
-	Object.entries(results).map(([ key, value ]) => {
+	Object.entries(results).forEach(([ key, value ]) => {
 		output += `${key}\n`;
 		output += `\n`.padStart(key.length, '-');
 		output += `\n${value.join('\n')}\n\n`;
@@ -14,8 +14,23 @@ const handleListCommandResult = (results: search.AvailableFields) => {
 	return output;
 };
 
-const handleSearchCommandResult = () => {
-	return '';
+const handleSearchCommandResult = ({ contentType, results }) => {
+	if (results && results.length === 0 ) {
+		return 'No results found';
+	};
+	
+	let output = [
+		`${contentType.toUpperCase()}`,
+		``.padStart(contentType.length, '-'),
+		...results.map(row => {
+			return [''].concat(Object.entries(row).map(([key, value]) => {
+				return `${key}`.padEnd(50) + `${value}`;
+			}));
+		})
+		.flat(),
+	];
+	
+	return output.join('\n');
 };
 
 export const handleCli = (argv) => {
@@ -23,11 +38,6 @@ export const handleCli = (argv) => {
 
 	const dataService = makeDataService();
 	const searchService = search.makeSearchService({ dataService });
-
-	const programHelp = () => {
-		program.help();
-  	process.exit(1);
-	};
 
 	program
 		.command('list')
@@ -40,30 +50,25 @@ export const handleCli = (argv) => {
 	program
 		.command('search')
 		.description('Search for a value with a data type')
-		.requiredOption('-t, --type [value]', 'valid types; user | ticket | organisation')
-		.requiredOption('-f, --field [value]', 'field to search by')
-		.requiredOption('-q, --query [value]', 'search value')
-		.action(({ type, field, query}) => {
-
-			if (!['user', 'ticket', 'organisation'].includes(type)) {
-				programHelp();
+		.requiredOption('-t, --contentType <type>', 'valid types; user | ticket | organisation')
+		.requiredOption('-f, --field <field>', 'field to search by')
+		.requiredOption('-q, --query <query>', 'search value')
+		.action(({ contentType, field, query}) => {
+			if (!['users', 'tickets', 'organisations'].includes(contentType)) {
+				console.error(`${contentType} is not a valid type\n`);
+				program.help();
 			};
 
-			// @ts-ignore
-			actionPromise = searchService.query({ type, field, query })
-				.then(handleSearchCommandResult);
+			actionPromise = searchService.query({ contentType, field, query })
+				.then(results => handleSearchCommandResult({contentType, results}));
 		});
 
 	program.on('command:*', () => {
 		console.error(`Invalid command - ${program.args.join()}`);
-		programHelp();
+		program.help();
 	});
 
 	program.parse(argv);
-
-	if (!argv.slice(2).length) {
-		programHelp();
-	}
 
 	return actionPromise;
 };

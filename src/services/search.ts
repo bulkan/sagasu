@@ -28,8 +28,8 @@ export class SearchService {
 		});
 	}
 
-	public query() {
-
+	public query({ contentType, field, query }) {
+		return this.dataService.queryByField({ contentType, field, query });
 	}
 }
 
