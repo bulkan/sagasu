@@ -1,5 +1,5 @@
 import program from 'commander';
-import * as search from './services/searchService';
+import * as search from './services/search';
 import { makeDataService } from './services/data';
 
 const handleListCommandResult = results => {

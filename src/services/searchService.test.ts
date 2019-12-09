@@ -1,4 +1,4 @@
-import { makeSearchService } from './searchService';
+import { makeSearchService } from './search';
 
 describe('searchService', () => {
 	let searchService;

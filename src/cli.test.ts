@@ -1,5 +1,5 @@
 import { handleCli } from './cli';
-import * as search from './services/searchService';
+import * as search from './services/search';
 
 describe('cli', () => {
 	let output;
