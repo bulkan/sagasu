@@ -1,8 +1,9 @@
-const fs = require('fs');
-const path = require('path');
-const JSONStream = require('JSONStream');
+import * as fs from 'fs';
+import * as path from 'path';
+import JSONStream from 'JSONStream';
 
-const makeDataService = () => {
+
+export const makeDataService = () => {
 	const dataRoot = path.join(__dirname, '..', '..', 'data');
 	const users = path.join(dataRoot, 'users.json');
 	const organizations = path.join(dataRoot, 'organizations.json');
@@ -67,8 +68,4 @@ const makeDataService = () => {
 		getKeysFromContentType,
 		filterByFieldAndValue
 	}
-};
-
-module.exports = {
-	makeDataService
 };

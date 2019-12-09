@@ -1,6 +1,6 @@
-#!/usr/bin/env node
+#!/usr/bin/env -S npx ts-script
 
-const { handleCli } = require('../src/cli');
+import { handleCli } from '../src/cli';
 
 function main() {
 	handleCli(process.argv)

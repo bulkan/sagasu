@@ -1,5 +1,5 @@
 
-const makeSearchService = ({ dataService }) => {
+export const makeSearchService = ({ dataService }) => {
 	const listFields = () => {
 		return Promise.all([
 			dataService.getKeysFromContentType('users'),
@@ -23,8 +23,4 @@ const makeSearchService = ({ dataService }) => {
 		listFields,
 		query
 	};
-}
-
-module.exports = {
-	makeSearchService
 };

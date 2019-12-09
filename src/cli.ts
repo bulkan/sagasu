@@ -1,24 +1,24 @@
-const program = require('commander');
-const search = require('./searchService');
-const { makeDataService } = require('./services/data');
+import program from 'commander';
+import * as search from './searchService';
+import { makeDataService } from './services/data';
 
 const handleListCommandResult = results => {
 	let output = 'Available Fields\n\n';
 
-	Object.entries(results).map(([key, value]) => {
+	Object.entries(results).map(([ key, value ]: [string, Array<string>]) => {
 		output += `${key}\n`;
 		output += `\n`.padStart(key.length, '-');
-		output += `\n${value.join('\n')}\n\n`
+		output += `\n${value.join('\n')}\n\n`;
 	});
 
 	return output;
 };
 
-const handleSearchCommandResult = results => {
+const handleSearchCommandResult = () => {
 	return '';
-}
+};
 
-const handleCli = (argv) => {
+export const handleCli = (argv) => {
 	let actionPromise;
 
 	const dataService = makeDataService();
@@ -51,6 +51,7 @@ const handleCli = (argv) => {
 				programHelp();
 			};
 
+			// @ts-ignore
 			actionPromise = searchService.query({ type, field, query })
 				.then(handleSearchCommandResult);
 		});
@@ -67,8 +68,4 @@ const handleCli = (argv) => {
 	}
 
 	return actionPromise;
-};
-
-module.exports = {
-	handleCli
 };

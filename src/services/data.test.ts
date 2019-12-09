@@ -1,8 +1,9 @@
-const fs = require('fs');
-const { Readable } = require('stream');
-const { makeDataService } = require('./data');
+import * as fs from 'fs';
+import { Readable } from 'stream';
+import { makeDataService } from './data';
 
 jest.mock('fs');
+
 
 describe('dataService', () => {
 	const dataService = makeDataService();
@@ -12,12 +13,14 @@ describe('dataService', () => {
 		const mockReadableStream = new Readable();
 		mockReadableStream.push(jsonString);
 		mockReadableStream.push(null);
+
+		//@ts-ignore
 		fs.createReadStream.mockReturnValue(mockReadableStream);
 	});
 
 	describe('#getKeysFromContentType', () => {
 		it('should throw an error if contentType is not provide', () => {
-			return expect(dataService.getKeysFromContentType()).rejects.toThrow('Missing contentType')
+			return expect(dataService.getKeysFromContentType(null)).rejects.toThrow('Missing contentType')
 		});
 
 		it('should return list of available fields', async () => {

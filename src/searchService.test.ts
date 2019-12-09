@@ -1,4 +1,4 @@
-const { makeSearchService } = require('./searchService');
+import { makeSearchService } from './searchService';
 
 describe('searchService', () => {
 	let searchService;

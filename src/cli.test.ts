@@ -1,20 +1,24 @@
-const { handleCli } = require('./cli');
-
-const search = require('./searchService');
-
-const listFields = jest.fn().mockResolvedValue({
-	fields: ['firstName']
-});
-
-const query = jest.fn().mockResolvedValue();
-
-search.makeSearchService = () => ({
-	listFields, query
-});
+import { handleCli } from './cli';
+import * as search from './searchService';
 
 describe('cli', () => {
-	let searchService = search.makeSearchService();
 	let output;
+	
+	let query;
+	let listFields;
+
+	beforeEach(() => {
+		query = jest.fn().mockResolvedValue(null);
+
+		listFields = jest.fn().mockResolvedValue({
+			fields: ['firstName']
+		});
+
+		jest.spyOn(search, 'makeSearchService').mockReturnValue({
+			listFields, query
+		});
+
+	});
 
 	describe('list', () => {
 		beforeEach(async () => {
@@ -26,7 +30,7 @@ describe('cli', () => {
 		});
 
 		it('calls searchService.listFields', () => {
-			expect(searchService.listFields).toHaveBeenCalled();
+			expect(listFields).toHaveBeenCalled();
 		});
 	});
 
@@ -34,7 +38,7 @@ describe('cli', () => {
 		describe('when all required options are provided', () => {
 			it('should call searchService.query', () => {
 				handleCli(['', '', 'search', '-t', 'user', '-f', '_id', '-q', 'abc123']);
-				expect(searchService.query).toHaveBeenCalledWith({
+				expect(query).toHaveBeenCalledWith({
 					type: 'user',
 					field: '_id',
 					query: 'abc123'

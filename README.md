@@ -11,7 +11,7 @@ yarn install
 
 ## Usage
 
-`./bin/sagasu --help`
+`./bin/sagasu.ts --help`
 
 ```
 Usage: sagasu [options] [command]
@@ -27,11 +27,11 @@ Commands:
 
 List available fields;
 
-`./bin/sagasu list`
+`./bin/sagasu.ts list`
 
 Search for a user by `alias`
 
-`./bin/sagasu search --type user --field alias --query Rose`
+`./bin/sagasu.ts search --type user --field alias --query Rose`
 
 
 ## Notes
