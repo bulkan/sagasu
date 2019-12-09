@@ -6,7 +6,7 @@ jest.mock('fs');
 
 describe('dataService', () => {
 	const dataService = makeDataService();
-	const jsonString = `[{"firstName":"bulkan","lastName":"evcimen","id":"123"},{"lastName":"gilfyole","id":444}]`
+	const jsonString = `[{"firstName":"bulkan","lastName":"evcimen","id":"123"},{"lastName":"gilfyole","id":444}]`;
 
 	beforeEach(() => {
 		const mockReadableStream = new Readable();
@@ -29,6 +29,7 @@ describe('dataService', () => {
 	describe('#filterByFieldAndValue', () => {
 
 		it.todo('should throw an error if required params arent passed');
+
 		it('should return fields found', async () => {
 			const results = await dataService.filterByFieldAndValue('users', 'lastName', 'evcimen');
 			expect(results).toEqual(
