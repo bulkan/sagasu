@@ -1,10 +1,30 @@
 const program = require('commander');
 const search = require('./searchService');
+const { makeDataService } = require('./services/data');
 
-const handleCli = async (argv) => {
+const handleListCommandResult = results => {
+	let output = 'Available Fields\n\n';
+
+	Object.entries(results).map(([key, value]) => {
+		output += `${key}\n`;
+		output += `\n`.padStart(key.length, '-');
+		output += `\n${value.join('\n')}\n\n`
+	});
+
+	return output;
+};
+
+const handleSearchCommandResult = results => {
+	return '';
+}
+
+const handleCli = (argv) => {
 	let actionPromise;
 
-	const searchService = search.makeSearchService();
+	const dataService = makeDataService();
+	const searchService = search.makeSearchService({
+		dataService
+	});
 
 	const programHelp = () => {
 		program.help();
@@ -15,7 +35,8 @@ const handleCli = async (argv) => {
 		.command('list')
 		.description('List searchable fields')
 		.action(() => {
-			actionPromise = searchService.getFields();
+			actionPromise = searchService.listFields()
+				.then(handleListCommandResult);
 		});
 
 	program
@@ -30,8 +51,14 @@ const handleCli = async (argv) => {
 				programHelp();
 			};
 
-			actionPromise = searchService.query({ type, field, query });
+			actionPromise = searchService.query({ type, field, query })
+				.then(handleSearchCommandResult);
 		});
+
+	program.on('command:*', () => {
+		console.error(`Invalid command - ${program.args.join()}`);
+		programHelp();
+	});
 
 	program.parse(argv);
 

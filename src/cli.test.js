@@ -2,24 +2,31 @@ const { handleCli } = require('./cli');
 
 const search = require('./searchService');
 
-const getFields = jest.fn();
-const query = jest.fn();
+const listFields = jest.fn().mockResolvedValue({
+	fields: ['firstName']
+});
+
+const query = jest.fn().mockResolvedValue();
 
 search.makeSearchService = () => ({
-	getFields, query
+	listFields, query
 });
 
 describe('cli', () => {
 	let searchService = search.makeSearchService();
+	let output;
 
 	describe('list', () => {
-
-		beforeEach(() => {
-			handleCli([ '', '', 'list' ]);
+		beforeEach(async () => {
+			output = await handleCli([ '', '', 'list' ]);
 		});
 
-		it('calls searchService.getFields', () => {
-			expect(searchService.getFields).toHaveBeenCalled();
+		it('should return formatted output', () => {
+			expect(output.replace(/\n/g, ' ')).toEqual(`Available Fields  fields -----  firstName  `);
+		});
+
+		it('calls searchService.listFields', () => {
+			expect(searchService.listFields).toHaveBeenCalled();
 		});
 	});
 
