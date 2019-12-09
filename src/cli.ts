@@ -3,20 +3,24 @@ import * as search from './services/search';
 import { makeDataService } from './services/data';
 
 const handleListCommandResult = (results: search.AvailableFields) => {
-	let output = 'Available Fields\n\n';
-
-	Object.entries(results).forEach(([ key, value ]) => {
-		output += `${key}\n`;
-		output += `\n`.padStart(key.length, '-');
-		output += `\n${value.join('\n')}\n\n`;
-	});
+	let output =  [
+		'Available Fields',
+		...Object.entries(results).map(([ contentType, fields ]) => {
+			return [
+				`${contentType}`,
+				``.padStart(contentType.length, '-'),
+				...fields,
+				''
+			];
+		})
+	];
 
 	return output;
 };
 
 const handleSearchCommandResult = ({ contentType, results }) => {
 	if (results && results.length === 0 ) {
-		return 'No results found';
+		return ['No results found'];
 	};
 	
 	let output = [
@@ -27,10 +31,10 @@ const handleSearchCommandResult = ({ contentType, results }) => {
 				return `${key}`.padEnd(50) + `${value}`;
 			}));
 		})
-		.flat(),
+		.flat()
 	];
 	
-	return output.join('\n');
+	return output;
 };
 
 export const handleCli = (argv) => {
@@ -38,6 +42,8 @@ export const handleCli = (argv) => {
 
 	const dataService = makeDataService();
 	const searchService = search.makeSearchService({ dataService });
+
+	program.exitOverride();
 
 	program
 		.command('list')
@@ -54,7 +60,7 @@ export const handleCli = (argv) => {
 		.requiredOption('-f, --field <field>', 'field to search by')
 		.requiredOption('-q, --query <query>', 'search value')
 		.action(({ contentType, field, query}) => {
-			if (!['users', 'tickets', 'organisations'].includes(contentType)) {
+			if (!['users', 'tickets', 'organizations'].includes(contentType)) {
 				console.error(`${contentType} is not a valid type\n`);
 				program.help();
 			};
@@ -69,6 +75,15 @@ export const handleCli = (argv) => {
 	});
 
 	program.parse(argv);
+
+	if (!process.argv.slice(2).length) {
+		program.help();
+	}
+
+	if (!actionPromise) {
+		console.error(`Invalid command - ${program.args.join()}`);
+		program.help();
+	}
 
 	return actionPromise;
 };

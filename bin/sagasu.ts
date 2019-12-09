@@ -4,8 +4,8 @@ import { handleCli } from '../src/cli';
 
 function main() {
 	handleCli(process.argv)
-		.then(result => {
-			console.log(result);
+		.then(( results = [] ) => {
+			console.log(results.flat().join('\n'));
 		})
 		.catch(err => {
 			console.error(err);

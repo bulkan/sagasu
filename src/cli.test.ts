@@ -20,13 +20,17 @@ describe('cli', () => {
 
 	});
 
-	describe('list', () => {
+	describe('command: list', () => {
 		beforeEach(async () => {
 			output = await handleCli([ '', '', 'list' ]);
 		});
 
 		it('should return formatted output', () => {
-			expect(output.replace(/\n/g, ' ')).toEqual(`Available Fields  fields -----  firstName  `);
+			const expected = [
+				`Available Fields`,
+				'fields', '------', 'firstName', ''
+			];
+			expect(output.flat()).toEqual(expected);
 		});
 
 		it('calls searchService.listFields', () => {
@@ -34,14 +38,56 @@ describe('cli', () => {
 		});
 	});
 
-	describe('search', () => {
+	
+	describe('command: search', () => {			
+		let output;
+		
+		describe('when all required options is NOT provided', () => {
+			beforeEach(async () => {
+				jest.spyOn(process, 'exit').mockImplementation();
+
+				output = await handleCli(['', '', 'search', '-f', '_id', '-q', '123']);
+			});
+			it('should show program help', () => {
+
+			});
+		});
+
 		describe('when all required options are provided', () => {
-			it('should call searchService.query', () => {
-				handleCli(['', '', 'search', '-t', 'users', '-f', '_id', '-q', 'abc123']);
-				expect(query).toHaveBeenCalledWith({
-					contentType: 'users',
-					field: '_id',
-					query: 'abc123'
+			describe('and there are results', () => {
+				beforeEach(async () => {
+					query.mockResolvedValue([
+						{_id: '123', name: 'bulks'}
+					]);			
+		
+					output = await handleCli(['', '', 'search', '-t', 'users', '-f', '_id', '-q', '123']);
+				});
+
+				it('should formatted results', () => {
+					const expected = [
+						'USERS', '-----', '',
+						'_id'.padEnd(50) + '123',
+						'name'.padEnd(50) + 'bulks'
+					];
+
+					expect(output).toEqual(expected);
+				});
+			});
+
+			describe('and there are no results', () => {
+				beforeEach(async () => {
+					output = await handleCli(['', '', 'search', '-t', 'users', '-f', '_id', '-q', 'abc123']);
+				});
+				it('should formatted results', () => {
+					expect(output).toEqual(['No results found']);
+				});
+				
+				it('should call searchService.query', () => {
+					expect(query).toHaveBeenCalledWith({
+						contentType: 'users',
+						field: '_id',
+						query: 'abc123'
+					});
 				});
 			});
 		});
