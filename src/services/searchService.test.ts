@@ -29,7 +29,7 @@ describe('searchService', () => {
 
 		it('should call dataService.getKeysFromContentType', async () => {
 			expect(dataService.getKeysFromContentType.mock.calls).toEqual([
-				[ 'users' ], ['tickets'], ['organizations']
+				[ {contentType: 'users'} ], [{contentType: 'tickets'}], [{contentType: 'organizations'}]
 			]);
 		});
 	});

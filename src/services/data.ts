@@ -3,7 +3,13 @@ import * as path from 'path';
 import JSONStream from 'JSONStream';
 
 
-export const makeDataService = () => {
+export interface DataService {
+	getKeysFromContentType: ({ contentType }: { contentType?: string }) => Promise<any>;
+	filterByFieldAndValue: ({  contentType, field, query }) => Promise<any>;
+}
+
+
+export const makeDataService = (): DataService => {
 	const dataRoot = path.join(__dirname, '..', '..', 'data');
 	const users = path.join(dataRoot, 'users.json');
 	const organizations = path.join(dataRoot, 'organizations.json');
@@ -15,7 +21,7 @@ export const makeDataService = () => {
 		tickets
 	};
 
-	const getKeysFromContentType = (contentType) => {
+	const getKeysFromContentType = ({ contentType }) => {
 		if (!contentType || !contentType.length) {
 			return Promise.reject(new Error(`Missing contentType`));
 		}
@@ -37,7 +43,7 @@ export const makeDataService = () => {
 		});
 	};
 
-	const filterByFieldAndValue = (contentType, field, query) => {
+	const filterByFieldAndValue = ({ contentType, field, query }) => {
 		if (!contentType || !field || !query) {
 			return Promise.reject(new Error(`Missing params`));
 		}

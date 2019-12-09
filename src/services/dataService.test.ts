@@ -20,11 +20,11 @@ describe('dataService', () => {
 
 	describe('#getKeysFromContentType', () => {
 		it('should throw an error if contentType is not provide', () => {
-			return expect(dataService.getKeysFromContentType(null)).rejects.toThrow('Missing contentType')
+			return expect(dataService.getKeysFromContentType({})).rejects.toThrow('Missing contentType')
 		});
 
 		it('should return list of available fields', async () => {
-			const keys = await dataService.getKeysFromContentType('users');
+			const keys = await dataService.getKeysFromContentType({contentType: 'users' });
 			expect(keys).toEqual(['firstName', 'lastName', 'id']);
 		});
 	});
@@ -34,19 +34,27 @@ describe('dataService', () => {
 		it.todo('should throw an error if required params arent passed');
 
 		it('should return fields found', async () => {
-			const results = await dataService.filterByFieldAndValue('users', 'lastName', 'evcimen');
+			const results = await dataService.filterByFieldAndValue({ 
+				contentType: 'users', 
+				field: 'lastName', 
+				query: 'evcimen' 
+			});
 			expect(results).toEqual(
 				[ { firstName: 'bulkan', lastName: 'evcimen', id: '123' } ]
 			)
 		});
 
 		it('should handle missing properties on records', async () => {
-			const results = await dataService.filterByFieldAndValue('users', 'firstName', 'bertram');
+			const results = await dataService.filterByFieldAndValue({
+				contentType: 'users',  field: 'firstName', query: 'bertram'
+			});
 			expect(results).toEqual([]);
 		});
 
 		it('should treat fields as string', async () => {
-			const results = await dataService.filterByFieldAndValue('users', 'id', '444');
+			const results = await dataService.filterByFieldAndValue({
+				contentType: 'users', field: 'id', query: '444' 
+			});
 			expect(results).toEqual([
 				{lastName: 'gilfyole', id: 444}
 			]);

@@ -1,10 +1,11 @@
+import { DataService } from './data';
 
-export const makeSearchService = ({ dataService }) => {
+export const makeSearchService = ({ dataService } : { dataService: DataService }) => {
 	const listFields = () => {
 		return Promise.all([
-			dataService.getKeysFromContentType('users'),
-			dataService.getKeysFromContentType('tickets'),
-			dataService.getKeysFromContentType('organizations')
+			dataService.getKeysFromContentType({contentType: 'users' }),
+			dataService.getKeysFromContentType({contentType: 'tickets' }),
+			dataService.getKeysFromContentType({contentType: 'organizations' })
 		])
 		.then(([users, tickets, organizations]) => {
 			return {
