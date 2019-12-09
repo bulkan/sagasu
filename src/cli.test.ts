@@ -28,7 +28,7 @@ describe('cli', () => {
 		it('should return formatted output', () => {
 			const expected = [
 				`Available Fields`,
-				'fields', '------', 'firstName', ''
+				'FIELDS', '------', 'firstName', ''
 			];
 			expect(output.flat()).toEqual(expected);
 		});
@@ -39,21 +39,34 @@ describe('cli', () => {
 	});
 
 	
-	describe('command: search', () => {			
+	describe('command: search', () => {					
 		let output;
-		
+		let mockConsoleError = jest.fn()
+
 		describe('when all required options is NOT provided', () => {
 			beforeEach(async () => {
-				jest.spyOn(process, 'exit').mockImplementation();
+				console.error = mockConsoleError;
 
-				output = await handleCli(['', '', 'search', '-f', '_id', '-q', '123']);
+				try {
+					await handleCli(['', '', 'search', '-f', '_id', '-q', '123']);
+				} catch (err) {
+					output = err;
+				}
 			});
+
+			it('should log error', () => {
+				expect(mockConsoleError).toHaveBeenCalledWith(`error: required option '-t, --contentType <type>' not specified`);
+			});
+
 			it('should show program help', () => {
 
+				expect(output).toEqual('Invalid command')
 			});
 		});
 
 		describe('when all required options are provided', () => {
+			let output;
+
 			describe('and there are results', () => {
 				beforeEach(async () => {
 					query.mockResolvedValue([

@@ -7,7 +7,7 @@ const handleListCommandResult = (results: search.AvailableFields) => {
 		'Available Fields',
 		...Object.entries(results).map(([ contentType, fields ]) => {
 			return [
-				`${contentType}`,
+				`${contentType.toUpperCase()}`,
 				``.padStart(contentType.length, '-'),
 				...fields,
 				''
@@ -74,13 +74,13 @@ export const handleCli = (argv) => {
 		program.help();
 	});
 
-	program.parse(argv);
-
-	if (!process.argv.slice(2).length) {
-		program.help();
+	try {
+		program.parse(argv);
+	} catch (err) {
+		actionPromise = Promise.reject('Invalid command');
 	}
 
-	if (!actionPromise) {
+	if (!argv.slice(2).length) {
 		console.error(`Invalid command - ${program.args.join()}`);
 		program.help();
 	}
