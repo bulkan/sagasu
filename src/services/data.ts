@@ -3,31 +3,26 @@ import * as path from 'path';
 import JSONStream from 'JSONStream';
 
 
-export interface DataService {
-	getKeysFromContentType: ({ contentType }: { contentType?: string }) => Promise<any>;
-	filterByFieldAndValue: ({  contentType, field, query }) => Promise<any>;
-};
+export class DataService {
+	dataRoot = path.join(__dirname, '..', '..', 'data');
+	users = path.join(this.dataRoot, 'users.json');
+	organizations = path.join(this.dataRoot, 'organizations.json');
+	tickets = path.join(this.dataRoot, 'tickets.json');
 
-export const makeDataService = (): DataService => {
-	const dataRoot = path.join(__dirname, '..', '..', 'data');
-	const users = path.join(dataRoot, 'users.json');
-	const organizations = path.join(dataRoot, 'organizations.json');
-	const tickets = path.join(dataRoot, 'tickets.json');
-
-	const contentTypeFilePaths = {
-		users,
-		organizations,
-		tickets
+	contentTypeFilePaths = {
+		users: this.users,
+		organizations: this.organizations,
+		tickets: this.tickets
 	};
 
-	const getKeysFromContentType = ({ contentType }) => {
+	public getKeysFromContentType({ contentType }: { contentType?: string }) {
 		if (!contentType || !contentType.length) {
 			return Promise.reject(new Error(`Missing contentType`));
 		}
 
 		return new Promise((resolve, reject) => {
 			const keyParser = JSONStream.parse([{ emitKey: true }]);
-			const contentTypeFilePath = contentTypeFilePaths[contentType.toLowerCase()];
+			const contentTypeFilePath = this.contentTypeFilePaths[contentType.toLowerCase()];
 			const stream = fs.createReadStream(contentTypeFilePath)
 				.pipe(keyParser);
 
@@ -40,9 +35,9 @@ export const makeDataService = (): DataService => {
 				keys = new Set([...keys, ...newKeys]);
 			});
 		});
-	};
+	}
 
-	const filterByFieldAndValue = ({ contentType, field, query }) => {
+	public filterByFieldAndValue({ contentType, field, query }) {
 		if (!contentType || !field || !query) {
 			return Promise.reject(new Error(`Missing params`));
 		}
@@ -50,7 +45,7 @@ export const makeDataService = (): DataService => {
 		const parser = JSONStream.parse('*');
 
 		return new Promise((resolve, reject) => {
-			const contentTypeFilePath = contentTypeFilePaths[contentType.toLowerCase()];
+			const contentTypeFilePath = this.contentTypeFilePaths[contentType.toLowerCase()];
 			const stream = fs.createReadStream(contentTypeFilePath)
 				.pipe(parser);
 
@@ -66,11 +61,7 @@ export const makeDataService = (): DataService => {
 				}
 			});
 		});
-
 	};
+}
 
-	return {
-		getKeysFromContentType,
-		filterByFieldAndValue
-	}
-};
+export const makeDataService = () => new DataService();

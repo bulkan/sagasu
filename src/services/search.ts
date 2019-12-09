@@ -6,33 +6,31 @@ export interface AvailableFields {
 	organizations: Array<string>;
 }
 
-export interface SearchService  {
-	listFields: () => Promise<AvailableFields>;
-	query: () => Promise<any>;
-}
+export class SearchService {
+	dataService: DataService;
 
-export const makeSearchService = ({ dataService } : { dataService: DataService }) => {
-	const listFields = () => {
+	constructor(dataService: DataService) {
+		this.dataService = dataService;
+	}
+
+	public listFields() : Promise<AvailableFields> {
 		return Promise.all([
-			dataService.getKeysFromContentType({contentType: 'users' }),
-			dataService.getKeysFromContentType({contentType: 'tickets' }),
-			dataService.getKeysFromContentType({contentType: 'organizations' })
+			this.dataService.getKeysFromContentType({contentType: 'users' }),
+			this.dataService.getKeysFromContentType({contentType: 'tickets' }),
+			this.dataService.getKeysFromContentType({contentType: 'organizations' })
 		])
 		.then(([users, tickets, organizations]) => {
 			return {
 				users,
 				tickets,
 				organizations
-			};
+			} as AvailableFields;
 		});
-	};
+	}
 
-	const query = async () => {
+	public query() {
 
-	};
+	}
+}
 
-	return {
-		listFields,
-		query
-	};
-};
+export const makeSearchService = ({ dataService } ) => new SearchService(dataService);

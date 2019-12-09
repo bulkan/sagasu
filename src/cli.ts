@@ -22,9 +22,7 @@ export const handleCli = (argv) => {
 	let actionPromise;
 
 	const dataService = makeDataService();
-	const searchService = search.makeSearchService({
-		dataService
-	});
+	const searchService = search.makeSearchService({ dataService });
 
 	const programHelp = () => {
 		program.help();
