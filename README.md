@@ -52,7 +52,6 @@ Search `organizations` by empty `description`
 * No joining of data is done i.e finding all tickets belonging to a user.
 * Instead of processing the JSON files directly I could have also imported the data into 
   a database like SQLite.
-* 
 
 *Performance*
 
