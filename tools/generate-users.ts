@@ -1,7 +1,8 @@
-#!/usr/bin/env node
-const fs = require('fs');
-const faker = require('faker');
-const JSONStream = require('JSONStream');
+#!/usr/bin/env -S ts-script
+
+import fs from 'fs';
+import faker from 'faker';
+import JSONStream from 'JSONStream';
 
 const generateUser = () => {
   const id = faker.random.number();
@@ -33,10 +34,9 @@ const generateUser = () => {
     suspended: faker.random.boolean(),
     role: 'admin'
   };
-}
+};
 
-
-function main() {
+const main = () => {
   const transformStream = JSONStream.stringify();
   const outputStream = fs.createWriteStream(`${__dirname}/large-users.json`);
 
@@ -53,7 +53,7 @@ function main() {
   transformStream.end();
 
   outputStream.on('finish', () => console.log('done'));
-}
+};
 
 if (require.main === module) {
   main();
