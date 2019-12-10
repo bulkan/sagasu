@@ -21,8 +21,8 @@ const users = [
     email: 'daryl.gonzales@example.com',
     favColors: [ 'pink' ]
   }, {
-    firstName: 'bulkan',
-    lastName: 'evcimen',
+    firstName: 'Bulkan Savun',
+    lastName: 'Evcimen',
     email: 'bulkan@gmail.com',
     favColors: [ 'blue' ]
   }, {
@@ -68,11 +68,11 @@ describe('dataService', () => {
     it('should return fields found', async () => {
       const results = await dataService.queryByField({
         contentType: 'users',
-        field: 'lastName',
-        query: 'evcimen',
+        field: 'firstName',
+        query: 'Bulkan Savun',
       });
       expect(results).toEqual(
-        [{ firstName: 'bulkan', lastName: 'evcimen', email: 'bulkan@gmail.com', favColors: ['blue'] }],
+        [{ firstName: 'Bulkan Savun', lastName: 'Evcimen', email: 'bulkan@gmail.com', favColors: ['blue'] }],
       );
     });
 
@@ -114,8 +114,8 @@ describe('dataService', () => {
 
       expect(results).toEqual([{
         favColors: [ 'blue' ],
-        firstName: 'bulkan',
-        lastName: 'evcimen',
+        firstName: 'Bulkan Savun',
+        lastName: 'Evcimen',
         email: 'bulkan@gmail.com'
       }]);
     });

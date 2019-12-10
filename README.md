@@ -1,5 +1,6 @@
 # sagasu
 
+TypeScript command line app to streami and parse large JSON files.
 
 ## Setup
 
@@ -32,7 +33,7 @@ List available fields;
 
 Search for a `user` by `name`
 
-`./bin/sagasu.ts search --contentType user --field name --query Rose`
+`./bin/sagasu.ts search --contentType users --field name --query "Lou Schmidt"`
 
 Search `ticket` by `description` 
 
