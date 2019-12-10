@@ -1,6 +1,6 @@
 {
   "defaultSeverity": "error",
-  "extends": ["tslint:recommended", "tslint-plugin-prettier", "tslint-config-prettier"],
+  "extends": ["tslint:recommended"],
   "rules": {
     "quotemark": [true, "single"],
     "object-literal-sort-keys": false,
@@ -8,8 +8,8 @@
     "no-any": false,
     "no-unsafe-any": false,
     "no-console": [false],
-    "no-unused-variable": true,
     "interface-name": false,
-    "interface-over-type-literal": false
+    "interface-over-type-literal": false,
+    "trailing-comma": false
   }
 }

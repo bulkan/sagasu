@@ -2,7 +2,7 @@
   "name": "sagasu",
   "version": "1.0.0",
   "scripts": {
-    "test": "jest",
+    "test": "jest --verbose --coverage",
     "lint": "tslint -c tslint.json 'src/**/*.ts'"
   },
   "engines": {

@@ -1,36 +1,36 @@
 import { DataService } from './data';
 
 export interface AvailableFields {
-	users: Array<string>;
-	tickets: Array<string>;
-	organizations: Array<string>;
+  users: string[];
+  tickets: string[];
+  organizations: string[];
 }
 
 export class SearchService {
-	dataService: DataService;
+  public dataService: DataService;
 
-	constructor(dataService: DataService) {
-		this.dataService = dataService;
-	}
+  constructor(dataService: DataService) {
+    this.dataService = dataService;
+  }
 
-	public listFields() : Promise<AvailableFields> {
-		return Promise.all([
-			this.dataService.getKeysFromContentType({contentType: 'users' }),
-			this.dataService.getKeysFromContentType({contentType: 'tickets' }),
-			this.dataService.getKeysFromContentType({contentType: 'organizations' })
-		])
-		.then(([users, tickets, organizations]) => {
-			return {
-				users,
-				tickets,
-				organizations
-			} as AvailableFields;
-		});
-	}
+  public listFields(): Promise<AvailableFields> {
+    return Promise.all([
+      this.dataService.getKeysFromContentType({contentType: 'users' }),
+      this.dataService.getKeysFromContentType({contentType: 'tickets' }),
+      this.dataService.getKeysFromContentType({contentType: 'organizations' }),
+    ])
+    .then(([users, tickets, organizations]) => {
+      return {
+        users,
+        tickets,
+        organizations,
+      } as AvailableFields;
+    });
+  }
 
-	public query({ contentType, field, query }) {
-		return this.dataService.queryByField({ contentType, field, query });
-	}
+  public query({ contentType, field, query }) {
+    return this.dataService.queryByField({ contentType, field, query });
+  }
 }
 
 export const makeSearchService = ({ dataService } ) => new SearchService(dataService);

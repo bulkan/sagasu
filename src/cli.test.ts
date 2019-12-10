@@ -2,107 +2,107 @@ import { handleCli } from './cli';
 import * as search from './services/search';
 
 describe('cli', () => {
-	let output;
-	
-	let query;
-	let listFields;
+  let query;
+  let listFields;
 
-	beforeEach(() => {
-		query = jest.fn().mockResolvedValue([]);
+  beforeEach(() => {
+    query = jest.fn().mockResolvedValue([]);
 
-		listFields = jest.fn().mockResolvedValue({
-			fields: ['firstName']
-		});
+    listFields = jest.fn().mockResolvedValue({
+      fields: ['firstName'],
+    });
 
-		jest.spyOn(search, 'makeSearchService').mockReturnValue({
-			listFields, query
-		} as search.SearchService);
+    jest.spyOn(search, 'makeSearchService').mockReturnValue({
+      listFields, query,
+    } as search.SearchService);
 
-	});
+  });
 
-	describe('command: list', () => {
-		beforeEach(async () => {
-			output = await handleCli([ '', '', 'list' ]);
-		});
+  describe('command: list', () => {
+    let output;
 
-		it('should return formatted output', () => {
-			const expected = [
-				`Available Fields`,
-				'FIELDS', '------', 'firstName', ''
-			];
-			expect(output.flat()).toEqual(expected);
-		});
+    beforeEach(async () => {
+      output = await handleCli([ '', '', 'list' ]);
+    });
 
-		it('calls searchService.listFields', () => {
-			expect(listFields).toHaveBeenCalled();
-		});
-	});
+    it('should return formatted output', () => {
+      const expected = [
+        `Available Fields`,
+        'FIELDS', '------', 'firstName', '',
+      ];
+      expect(output.flat()).toEqual(expected);
+    });
 
-	
-	describe('command: search', () => {					
-		let output;
-		let mockConsoleError = jest.fn()
+    it('calls searchService.listFields', () => {
+      expect(listFields).toHaveBeenCalled();
+    });
+  });
 
-		describe('when all required options is NOT provided', () => {
-			beforeEach(async () => {
-				console.error = mockConsoleError;
+  describe('command: search', () => {
+    describe('when all required options is NOT provided', () => {
+      const mockConsoleError = jest.fn();
+      let output;
 
-				try {
-					await handleCli(['', '', 'search', '-f', '_id', '-q', '123']);
-				} catch (err) {
-					output = err;
-				}
-			});
+      beforeEach(async () => {
+        console.error = mockConsoleError;
 
-			it('should log error', () => {
-				expect(mockConsoleError).toHaveBeenCalledWith(`error: required option '-t, --contentType <type>' not specified`);
-			});
+        try {
+          await handleCli(['', '', 'search', '-f', '_id', '-q', '123']);
+        } catch (err) {
+          output = err;
+        }
+      });
 
-			it('should show program help', () => {
+      it('should log error', () => {
+        expect(mockConsoleError)
+          .toHaveBeenCalledWith(`error: required option '-t, --contentType <type>' not specified`);
+      });
 
-				expect(output).toEqual('Invalid command')
-			});
-		});
+      it('should show program help', () => {
 
-		describe('when all required options are provided', () => {
-			let output;
+        expect(output).toEqual('Invalid command');
+      });
+    });
 
-			describe('and there are results', () => {
-				beforeEach(async () => {
-					query.mockResolvedValue([
-						{_id: '123', name: 'bulks'}
-					]);			
-		
-					output = await handleCli(['', '', 'search', '-t', 'users', '-f', '_id', '-q', '123']);
-				});
+    describe('when all required options are provided', () => {
+      let output;
 
-				it('should formatted results', () => {
-					const expected = [
-						'USERS', '-----', '',
-						'_id'.padEnd(50) + '123',
-						'name'.padEnd(50) + 'bulks'
-					];
+      describe('and there are results', () => {
+        beforeEach(async () => {
+          query.mockResolvedValue([
+            {_id: '123', name: 'bulks'},
+          ]);
 
-					expect(output).toEqual(expected);
-				});
-			});
+          output = await handleCli(['', '', 'search', '-t', 'users', '-f', '_id', '-q', '123']);
+        });
 
-			describe('and there are no results', () => {
-				beforeEach(async () => {
-					output = await handleCli(['', '', 'search', '-t', 'users', '-f', '_id', '-q', 'abc123']);
-				});
-				it('should formatted results', () => {
-					expect(output).toEqual(['No results found']);
-				});
-				
-				it('should call searchService.query', () => {
-					expect(query).toHaveBeenCalledWith({
-						contentType: 'users',
-						field: '_id',
-						query: 'abc123'
-					});
-				});
-			});
-		});
-	});
+        it('should formatted results', () => {
+          const expected = [
+            'USERS', '-----', '',
+            '_id'.padEnd(50) + '123',
+            'name'.padEnd(50) + 'bulks',
+          ];
+
+          expect(output).toEqual(expected);
+        });
+      });
+
+      describe('and there are no results', () => {
+        beforeEach(async () => {
+          output = await handleCli(['', '', 'search', '-t', 'users', '-f', '_id', '-q', 'abc123']);
+        });
+        it('should formatted results', () => {
+          expect(output).toEqual(['No results found']);
+        });
+
+        it('should call searchService.query', () => {
+          expect(query).toHaveBeenCalledWith({
+            contentType: 'users',
+            field: '_id',
+            query: 'abc123',
+          });
+        });
+      });
+    });
+  });
 });
