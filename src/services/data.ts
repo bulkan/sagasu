@@ -36,11 +36,7 @@ export class DataService {
     });
   }
 
-  public queryByField({ contentType, field, query }): Promise<string[]>  {
-    if (!contentType || !field || !query) {
-      return Promise.reject(new Error(`Missing params`));
-    }
-
+  public queryByField({ contentType, field, query = '' }): Promise<string[]>  {
     const parser = JSONStream.parse('*');
 
     return new Promise((resolve, reject) => {

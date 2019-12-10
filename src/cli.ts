@@ -58,8 +58,8 @@ export const handleCli = (argv) => {
     .description('Search for a value with a data type')
     .requiredOption('-t, --contentType <type>', 'valid types; user | ticket | organisation')
     .requiredOption('-f, --field <field>', 'field to search by')
-    .requiredOption('-q, --query <query>', 'search value')
-    .action(({ contentType, field, query}) => {
+    .option('-q, --query [query]', 'search value')
+    .action(({ contentType, field, query = ''}) => {
       if (!['users', 'tickets', 'organizations'].includes(contentType)) {
         console.error(`${contentType} is not a valid type\n`);
         program.help();

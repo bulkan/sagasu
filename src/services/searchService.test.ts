@@ -36,14 +36,20 @@ describe('searchService', () => {
   });
 
   describe('#query', () => {
-    beforeEach(async () => {
+    it('should throw an error if required params arent passed', () => {
+      const contentType = null;
+      const field = null;
+      const query = null;
+
+      return expect(searchService.query({ contentType, field, query })).rejects.toThrow('Missing params');
+    });
+
+    it('should call dataService.queryByField', async () => {
       const contentType = 'organizations';
       const field = 'name';
       const query = 'Co';
       await searchService.query({ contentType, field, query });
-    });
 
-    it('should call dataService.queryByField', () => {
       expect(dataService.queryByField).toHaveBeenCalledWith({
         contentType: 'organizations',
         field: 'name',

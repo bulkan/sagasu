@@ -29,13 +29,6 @@ describe('dataService', () => {
   });
 
   describe('#queryByField', () => {
-    it('should throw an error if required params arent passed', () => {
-      const contentType = null;
-      const field = null;
-      const query = null;
-      return expect(dataService.queryByField({ contentType, field, query })).rejects.toThrow('Missing params');
-    });
-
     it('should return fields found', async () => {
       const results = await dataService.queryByField({
         contentType: 'users',

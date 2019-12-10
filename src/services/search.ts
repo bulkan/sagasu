@@ -29,6 +29,10 @@ export class SearchService {
   }
 
   public query({ contentType, field, query }) {
+    if (!contentType || !field ) {
+      return Promise.reject(new Error(`Missing params`));
+    }
+
     return this.dataService.queryByField({ contentType, field, query });
   }
 }
