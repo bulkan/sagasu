@@ -35,11 +35,11 @@ Commands:
 
 `./bin/sagasu.ts search --contentType users --field name --query "Lou Schmidt"`
 
-* Search `ticket` by `description` 
+* Search `tickets` by `description` 
 
 `./bin/sagasu.ts search --contentType tickets --field description --query Nostrud`
 
-* Search `ticket` by `priority` 
+* Search `tickets` by `priority` 
 
 `./bin/sagasu.ts search --contentType tickets --field priority --query high`
 
