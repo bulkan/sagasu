@@ -40,11 +40,11 @@ Search `ticket` by `description`
 
 Search `organizations` by `domain_names`
 
-`./bin/sagasu.ts search --t organizations --field domain_names --query marqet`
+`./bin/sagasu.ts search -t organizations --field domain_names --query marqet`
 
 Search `organizations` by empty `description`
 
-`./bin/sagasu.ts search --t organizations --field description`
+`./bin/sagasu.ts search -t organizations --field description`
 
 ## Notes
 
