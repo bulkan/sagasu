@@ -44,6 +44,14 @@ describe('searchService', () => {
       return expect(searchService.query({ contentType, field, query })).rejects.toThrow('Missing params');
     });
 
+    it('should throw an error if contentType is not valid', () => {
+      const contentType = 'wat';
+      const field = 'name';
+      const query = null;
+
+      return expect(searchService.query({ contentType, field, query })).rejects.toThrow('wat is not a valid type');
+    });
+
     it('should call dataService.queryByField', async () => {
       const contentType = 'organizations';
       const field = 'name';

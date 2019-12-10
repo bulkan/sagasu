@@ -4,7 +4,7 @@ import JSONStream from 'JSONStream';
 
 export class DataService {
   public dataRoot = path.join(__dirname, '..', '..', 'data');
-  public users = path.join(this.dataRoot, 'large-users.json');
+  public users = path.join(this.dataRoot, 'users.json');
   public organizations = path.join(this.dataRoot, 'organizations.json');
   public tickets = path.join(this.dataRoot, 'tickets.json');
 
@@ -36,7 +36,7 @@ export class DataService {
     });
   }
 
-  public queryByField({ contentType, field, query = '' }): Promise<string[]>  {
+  public queryByField({ contentType, field, query }): Promise<string[]>  {
     const parser = JSONStream.parse('*');
 
     return new Promise((resolve, reject) => {
@@ -49,9 +49,15 @@ export class DataService {
       stream.on('end', () => resolve(results));
       stream.on('error', reject);
       stream.on('data', (data) => {
-        const val = data[field];
+        const value = data[field];
 
-        if (val && val.toString().indexOf(query) > -1) {
+        if (value === undefined) {
+          return;
+        }
+
+        if (Array.isArray(value) && value.some((arrayVal) => arrayVal.toString() === query)) {
+          results.push(data);
+        } else if (value.toString() === query) {
           results.push(data);
         }
       });

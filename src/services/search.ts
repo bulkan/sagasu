@@ -9,6 +9,8 @@ export interface AvailableFields {
 export class SearchService {
   public dataService: DataService;
 
+  private readonly CONTENT_TYPES = ['users', 'tickets', 'organizations'];
+
   constructor(dataService: DataService) {
     this.dataService = dataService;
   }
@@ -31,6 +33,10 @@ export class SearchService {
   public query({ contentType, field, query }) {
     if (!contentType || !field ) {
       return Promise.reject(new Error(`Missing params`));
+    }
+
+    if (!this.CONTENT_TYPES.includes(contentType)) {
+      return Promise.reject(new Error((`${contentType} is not a valid type\n`)));
     }
 
     return this.dataService.queryByField({ contentType, field, query });

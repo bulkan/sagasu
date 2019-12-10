@@ -60,11 +60,6 @@ export const handleCli = (argv) => {
     .requiredOption('-f, --field <field>', 'field to search by')
     .option('-q, --query [query]', 'search value')
     .action(({ contentType, field, query = ''}) => {
-      if (!['users', 'tickets', 'organizations'].includes(contentType)) {
-        console.error(`${contentType} is not a valid type\n`);
-        program.help();
-      }
-
       actionPromise = searchService.query({ contentType, field, query })
         .then((results) => handleSearchCommandResult({contentType, results}));
     });
