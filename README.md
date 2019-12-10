@@ -27,23 +27,27 @@ Commands:
 
 ### Examples
 
-List available fields;
+* List available fields;
 
 `./bin/sagasu.ts list`
 
-Search for a `user` by `name`
+* Search for a `user` by `name`
 
 `./bin/sagasu.ts search --contentType users --field name --query "Lou Schmidt"`
 
-Search `ticket` by `description` 
+* Search `ticket` by `description` 
 
 `./bin/sagasu.ts search --contentType tickets --field description --query Nostrud`
 
-Search `organizations` by `domain_names`
+* Search `ticket` by `priority` 
+
+`./bin/sagasu.ts search --contentType tickets --field priority --query high`
+
+* Search `organizations` by `domain_names`
 
 `./bin/sagasu.ts search -t organizations --field domain_names --query marqet`
 
-Search `organizations` by empty `description`
+* Search `organizations` by empty `description`
 
 `./bin/sagasu.ts search -t organizations --field description`
 
