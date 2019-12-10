@@ -4,11 +4,18 @@ TypeScript command line app to streami and parse large JSON files.
 
 ## Setup
 
-*NOTE*: Required node verions is [>=12.3.0](https://nodejs.org/en/download/)
+*NOTE*: Required node version is [>=12.3.0](https://nodejs.org/en/download/)
 
 ```
 yarn install 
 ```
+
+After installation of dependencies run tests to verify everything is working;
+
+```
+yarn test 
+```
+
 
 ## Usage
 
